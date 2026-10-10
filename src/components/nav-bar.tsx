@@ -23,6 +23,7 @@ export default function NavBar({ employe }: { employe: Employe }) {
     { href: "/alertes", label: "Alertes" },
     { href: "/catalogue", label: "Catalogue" },
     { href: "/devis", label: "Devis" },
+    { href: "/export", label: "Export" },
   ];
   const liensOuvrier = [{ href: "/moi", label: "Mon espace" }];
 
