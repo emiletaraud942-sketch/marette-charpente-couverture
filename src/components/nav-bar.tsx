@@ -11,16 +11,18 @@ async function seDeconnecter() {
 }
 
 export default function NavBar({ employe }: { employe: Employe }) {
-  const liensAdmin = [
+  const liensChefChantier = [
     { href: "/", label: "Tableau du jour" },
     { href: "/planning", label: "Planning" },
     { href: "/employes", label: "Employés" },
     { href: "/chantiers", label: "Chantiers" },
     { href: "/stock", label: "Stock" },
   ];
+  const liensAdmin = [...liensChefChantier, { href: "/catalogue", label: "Catalogue" }, { href: "/devis", label: "Devis" }];
   const liensOuvrier = [{ href: "/moi", label: "Mon espace" }];
 
-  const liens = employe.role === "ouvrier" ? liensOuvrier : liensAdmin;
+  const liens =
+    employe.role === "ouvrier" ? liensOuvrier : employe.role === "admin" ? liensAdmin : liensChefChantier;
 
   return (
     <nav className="flex items-center justify-between border-b bg-white px-4 py-3">

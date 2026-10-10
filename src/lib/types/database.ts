@@ -110,3 +110,28 @@ export type StockNiveau = {
   seuil_alerte: number | null;
   quantite_actuelle: number;
 };
+
+export type StatutDevis = "nouvelle" | "traitee";
+
+export type ProduitBois = {
+  id: string;
+  nom: string;
+  description: string | null;
+  prix_indicatif: number | null;
+  unite: string;
+  image_url: string | null;
+  disponible: boolean;
+  created_at: string;
+};
+
+export type DemandeDevis = {
+  id: string;
+  nom_client: string;
+  telephone_client: string;
+  email_client: string | null;
+  produit_id: string | null;
+  quantite: string | null;
+  message: string | null;
+  statut: StatutDevis;
+  created_at: string;
+};
