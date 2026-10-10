@@ -16,6 +16,7 @@ export default function NavBar({ employe }: { employe: Employe }) {
     { href: "/planning", label: "Planning" },
     { href: "/employes", label: "Employés" },
     { href: "/chantiers", label: "Chantiers" },
+    { href: "/stock", label: "Stock" },
   ];
   const liensOuvrier = [{ href: "/moi", label: "Mon espace" }];
 

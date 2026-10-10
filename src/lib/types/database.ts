@@ -77,3 +77,36 @@ export type LigneDashboard = {
   affectation: (Affectation & { chantier: Chantier }) | null;
   pointage_en_cours: Pointage | null;
 };
+
+export type CategorieMateriau = "bois" | "quincaillerie" | "isolation" | "couverture" | "autre";
+export type TypeMouvementStock = "entree" | "sortie";
+
+export type Materiau = {
+  id: string;
+  nom: string;
+  categorie: CategorieMateriau;
+  unite: string;
+  seuil_alerte: number | null;
+  created_at: string;
+};
+
+export type StockMouvement = {
+  id: string;
+  materiau_id: string;
+  type: TypeMouvementStock;
+  quantite: number;
+  chantier_id: string | null;
+  motif: string | null;
+  employe_id: string | null;
+  created_at: string;
+};
+
+/** Niveau de stock courant d'un matériau (vue stock_niveaux). */
+export type StockNiveau = {
+  materiau_id: string;
+  nom: string;
+  categorie: CategorieMateriau;
+  unite: string;
+  seuil_alerte: number | null;
+  quantite_actuelle: number;
+};
