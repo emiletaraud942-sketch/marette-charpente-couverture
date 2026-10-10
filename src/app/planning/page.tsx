@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { getCurrentEmploye } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
-import { formatJourCourt, joursDeLaSemaine } from "@/lib/date";
+import { aujourdhui, formatJourCourt, joursDeLaSemaine } from "@/lib/date";
 import type { Affectation, Chantier, Employe } from "@/lib/types/database";
 
 export default async function PlanningPage() {
@@ -79,6 +79,23 @@ export default async function PlanningPage() {
       <p className="mt-4 text-sm text-neutral-500">
         Pour affecter un employé, ouvrez la fiche du chantier concerné.
       </p>
+
+      <section className="mt-6 rounded border bg-white p-4">
+        <h2 className="mb-3 text-sm font-medium text-neutral-500">Disponibles aujourd&apos;hui</h2>
+        <div className="flex flex-wrap gap-2">
+          {(employes ?? [])
+            .filter((e) => e.statut === "actif" && !chantierDuJour(e.id, aujourdhui()))
+            .map((e) => (
+              <span key={e.id} className="rounded-full bg-emerald-100 px-3 py-1 text-sm text-emerald-800">
+                {e.prenom} {e.nom}
+              </span>
+            ))}
+          {(employes ?? []).filter((e) => e.statut === "actif" && !chantierDuJour(e.id, aujourdhui()))
+            .length === 0 ? (
+            <p className="text-sm text-neutral-500">Tout le monde est affecté aujourd&apos;hui.</p>
+          ) : null}
+        </div>
+      </section>
     </main>
   );
 }

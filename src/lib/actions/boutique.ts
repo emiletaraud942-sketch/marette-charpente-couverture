@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import Anthropic from "@anthropic-ai/sdk";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentEmploye } from "@/lib/auth";
 
@@ -49,6 +50,49 @@ export async function deposerDemandeDevis(formData: FormData) {
   if (error) throw new Error(error.message);
 
   redirect("/boutique/merci");
+}
+
+/** Résume/catégorise une demande de devis avec Claude (nécessite ANTHROPIC_API_KEY). */
+export async function resumerDevisAvecIA(devisId: string) {
+  const moi = await getCurrentEmploye();
+  if (moi?.role !== "admin") throw new Error("Réservé à l'administrateur");
+
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) {
+    throw new Error(
+      "Clé API IA non configurée — ajoutez ANTHROPIC_API_KEY dans les variables d'environnement.",
+    );
+  }
+
+  const supabase = await createClient();
+  const { data: devis } = await supabase
+    .from("demandes_devis")
+    .select("*, produit:produits_bois(*)")
+    .eq("id", devisId)
+    .maybeSingle();
+  if (!devis) throw new Error("Demande introuvable");
+
+  const anthropic = new Anthropic({ apiKey });
+  const reponse = await anthropic.messages.create({
+    model: "claude-sonnet-5-5",
+    max_tokens: 200,
+    messages: [
+      {
+        role: "user",
+        content:
+          "Résume en une phrase cette demande de devis pour une entreprise de vente de bois, " +
+          "et indique son niveau d'urgence (faible/normal/élevé). Réponds en français, " +
+          "sans préambule.\n\n" +
+          `Produit demandé : ${devis.produit?.nom ?? "hors catalogue"}\n` +
+          `Quantité : ${devis.quantite ?? "non précisée"}\n` +
+          `Message du client : ${devis.message ?? "aucun"}`,
+      },
+    ],
+  });
+
+  const texte = reponse.content.find((bloc) => bloc.type === "text")?.text ?? "";
+  await supabase.from("demandes_devis").update({ resume_ia: texte }).eq("id", devisId);
+  revalidatePath("/devis");
 }
 
 export async function marquerDevisTraite(devisId: string) {

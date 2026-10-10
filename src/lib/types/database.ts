@@ -133,5 +133,6 @@ export type DemandeDevis = {
   quantite: string | null;
   message: string | null;
   statut: StatutDevis;
+  resume_ia: string | null;
   created_at: string;
 };

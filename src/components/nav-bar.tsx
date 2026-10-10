@@ -18,7 +18,12 @@ export default function NavBar({ employe }: { employe: Employe }) {
     { href: "/chantiers", label: "Chantiers" },
     { href: "/stock", label: "Stock" },
   ];
-  const liensAdmin = [...liensChefChantier, { href: "/catalogue", label: "Catalogue" }, { href: "/devis", label: "Devis" }];
+  const liensAdmin = [
+    ...liensChefChantier,
+    { href: "/alertes", label: "Alertes" },
+    { href: "/catalogue", label: "Catalogue" },
+    { href: "/devis", label: "Devis" },
+  ];
   const liensOuvrier = [{ href: "/moi", label: "Mon espace" }];
 
   const liens =
